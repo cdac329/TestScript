@@ -1,0 +1,157 @@
+PipelineJob-BatchFiles
+
+pipeline {
+    agent any
+    stages {
+        stage('Job 1') {
+            steps {
+                script {
+                    bat 'path\\to\\your\\batchfile1.bat'
+                }
+            }
+        }
+        stage('Job 2') {
+            steps {
+                script {
+                    bat 'path\\to\\your\\batchfile2.bat'
+                }
+            }
+        }
+        stage('Job 3') {
+            steps {
+                script {
+                    bat 'path\\to\\your\\batchfile3.bat'
+                }
+            }
+        }
+        // Add more stages as needed
+    }
+
+    post {
+        always {
+            echo 'Pipeline completed.'
+        }
+        success {
+            echo 'Pipeline succeeded.'
+        }
+        failure {
+            echo 'Pipeline failed.'
+        }
+    }
+}
+----------------------------------
+PipelineJob-Jobs
+pipeline {
+    agent any
+
+    stages {
+        stage('Trigger Job 1') {
+            steps {
+                script {
+                    build job: 'Job1', wait: true
+                }
+            }
+        }
+        stage('Trigger Job 2') {
+            steps {
+                script {
+                    build job: 'Job2', wait: true
+                }
+            }
+        }
+        stage('Trigger Job 3') {
+            steps {
+                script {
+                    build job: 'Job3', wait: true
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Pipeline completed.'
+        }
+        success {
+            echo 'Pipeline succeeded.'
+        }
+        failure {
+            echo 'Pipeline failed.'
+        }
+    }
+}
+-------------------------------------
+	
+
+PipelineJob-TestNGsuite-with checkoutfrom GTI
+
+pipeline {
+    agent any
+
+    environment {
+        MAVEN_HOME = 'C:\\path\\to\\maven' // Ensure Maven is installed and this path is correct
+        PATH = "${env.PATH};${env.MAVEN_HOME}\\bin"
+    }
+
+    stages {
+        stage('Checkout Code') {
+            steps {
+                // Replace this with the correct SCM configuration if your code is in version control
+                dir('path\\to\\your\\selenium\\project') {
+                    // Example for Git:
+                    // git 'https://github.com/your-repo/your-selenium-project.git'
+                }
+            }
+        }
+        stage('Run TestNG Tests') {
+            steps {
+                dir('path\\to\\your\\selenium\\project') {
+                    bat 'mvn clean test -DsuiteXmlFile=your-testng.xml'
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Pipeline completed.'
+        }
+        success {
+            echo 'Pipeline succeeded.'
+        }
+        failure {
+            echo 'Pipeline failed.'
+        }
+    }
+}
+------------------------------------------------------
+
+pipeline with code on local machine
+
+pipeline {
+    agent any   
+
+    stages {
+        
+        stage('Run TestNG Tests') {
+            steps {
+                dir('PATH OF PROJECT DIRECTORY') {
+                    bat 'mvn clean test -DsuiteXmlFile=PATH TO YOUR testng.xml'
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Pipeline completed.'
+        }
+        success {
+            echo 'Pipeline succeeded.'
+        }
+        failure {
+            echo 'Pipeline failed.'
+        }
+    }
+}
+
